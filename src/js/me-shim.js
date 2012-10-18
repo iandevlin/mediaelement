@@ -556,7 +556,7 @@ mejs.HtmlMediaElementShim = {
 			
 				
 				var
-					videoId = playback.url.substr(playback.url.lastIndexOf('=')+1);
+					videoId = mejs.Utility.getYouTubeVideoId(playback.url);
 					youtubeSettings = {
 						container: container,
 						containerId: container.id,
