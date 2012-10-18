@@ -1,4 +1,3 @@
-
 /*
 Utility methods
 */
@@ -13,6 +12,13 @@ mejs.Utility = {
 		var el = document.createElement('div');
 		el.innerHTML = '<a href="' + this.escapeHTML(url) + '">x</a>';
 		return el.firstChild.href;
+	},
+	getYouTubeVideoId: function(url) {
+		var id = '';
+		var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/;
+		var match = url.match(regExp);
+		if (match && match[2].length == 11) id = match[2];
+		return id;
 	},
 	getScriptPath: function(scriptNames) {
 		var
