@@ -1,9 +1,9 @@
-
 // Core detector, plugins are added below
 mejs.PluginDetector = {
 
 	// main public function to test a plug version number PluginDetector.hasPluginVersion('flash',[9,0,125]);
 	hasPluginVersion: function(plugin, v) {
+		if (v === null) return true;	
 		var pv = this.plugins[plugin];
 		v[1] = v[1] || 0;
 		v[2] = v[2] || 0;
