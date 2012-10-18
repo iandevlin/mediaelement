@@ -1,4 +1,3 @@
-
 /*
 extension methods to <video> or <audio> object to bring it into parity with PluginMediaElement (see below)
 */
@@ -180,7 +179,11 @@ mejs.PluginMediaElement.prototype = {
 	// or an array [{src:'file.mp4',type:'video/mp4'},{src:'file.webm',type:'video/webm'}]
 	setSrc: function (url) {
 		if (typeof url == 'string') {
-			this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
+			if (this.pluginType == 'youtube') {
+				this.pluginApi.stopVideo();
+				this.pluginApi.cueVideoById(mejs.Utility.getYouTubeVideoId(url));
+			}
+			else this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(url));
 			this.src = mejs.Utility.absolutizeUrl(url);
 		} else {
 			var i, media;
@@ -188,7 +191,11 @@ mejs.PluginMediaElement.prototype = {
 			for (i=0; i<url.length; i++) {
 				media = url[i];
 				if (this.canPlayType(media.type)) {
-					this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
+					if (this.pluginType == 'youtube') {
+						this.pluginApi.stopVideo();
+						this.pluginApi.cueVideoById(mejs.Utility.getYouTubeVideoId(media.src));
+					}
+					else this.pluginApi.setSrc(mejs.Utility.absolutizeUrl(media.src));
 					this.src = mejs.Utility.absolutizeUrl(url);
 				}
 			}
@@ -238,16 +245,15 @@ mejs.PluginMediaElement.prototype = {
 
 	// additional non-HTML5 methods
 	setVideoSize: function (width, height) {
-		
-		//if (this.pluginType == 'flash' || this.pluginType == 'silverlight') {
+		if (this.pluginElement !== null) {
 			if ( this.pluginElement.style) {
 				this.pluginElement.style.width = width + 'px';
 				this.pluginElement.style.height = height + 'px';
 			}
-			if (this.pluginApi != null && this.pluginApi.setVideoSize) {
-				this.pluginApi.setVideoSize(width, height);
-			}
-		//}
+		}
+		if (this.pluginApi != null && this.pluginApi.setVideoSize) {
+			this.pluginApi.setVideoSize(width, height);
+		}
 	},
 
 	setFullscreen: function (fullscreen) {
